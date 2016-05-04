@@ -17,6 +17,24 @@ var Skill = React.createClass({
     this.setState({ editable: !this.state.editable })
   },
 
+  handleLevel(arrowType) {
+    var levels = ['bad', 'halfbad', 'fantastic'];
+    var name = this.props.skill.name
+    var details = this.props.skill.details
+    var id = this.props.skill.id
+    var level = this.props.skill.level
+    var index = levels.indexOf(level)
+
+
+    if (arrowType === 'up' && index < 2 ) {
+      var newLevel = levels[index + 1]
+      this.props.handleUpdate({id: id, name: name, details: details, level: newLevel})
+    } else if (arrowType === 'down' && index > 0 ) {
+      var newLevel = levels[index - 1]
+      this.props.handleUpdate({id: id, name: name, details: details, level: newLevel})
+    }
+  },
+
   render() {
     var name = this.state.editable ? <input type='text' ref='name'
                                       defaultValue={this.props.skill.name} />
@@ -30,7 +48,25 @@ var Skill = React.createClass({
     return(
       <div>
         {name}
-        <p><strong>Level:</strong> {this.props.skill.level}</p>
+
+        <div className='skill-level'>
+
+          <button onClick={this.handleLevel.bind(this, 'down')}
+                  type="button"
+                  className="btn btn-default btn-sm">
+            <span className="glyphicon glyphicon-triangle-bottom"></span>
+          </button>
+
+          <p><strong>Level:</strong> {this.props.skill.level}</p>
+
+          <button onClick={this.handleLevel.bind(this, 'up')}
+                  type="button"
+                  className="btn btn-default btn-sm">
+            <span className="glyphicon glyphicon-triangle-top"></span>
+          </button>
+
+        </div>
+
         {details}
         <button onClick={this.handleEdit}>{this.state.editable ? 'Submit' : 'Edit'}</button>
         <button onClick={this.props.handleDelete}>Delete</button>
